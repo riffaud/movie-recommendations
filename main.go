@@ -14,7 +14,7 @@ var (
 
 func init() {
 	var err error
-	storage, err = movie.StorageFromUrl("http://pastebin.com/raw/cVyp3McN")
+	storage, err = movie.StorageFromURL("http://pastebin.com/raw/cVyp3McN")
 
 	if err != nil {
 		fmt.Println(err)
@@ -34,13 +34,16 @@ func main() {
 	}
 
 	if *showing != "" {
-		s, err := time.Parse("15:04", *showing)
+		s, err := time.ParseInLocation("15:04", *showing, time.Local) // parse time in current timezone
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+		s = s.Add(-time.Minute * 30)
 		searchParams.Showing = s
 	}
 
-	fmt.Println(storage.Load(searchParams))
+	for _, m := range storage.Load(searchParams) {
+		fmt.Println(m.DisplayNextShowing(searchParams.Showing))
+	}
 }
