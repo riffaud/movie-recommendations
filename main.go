@@ -36,7 +36,7 @@ func main() {
 	if *showing != "" {
 		s, err := time.ParseInLocation("15:04", *showing, time.Local) // parse time in current timezone
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Error Parsing date, should use format: 15:04")
 			return
 		}
 		s = s.Add(-time.Minute * 30)
