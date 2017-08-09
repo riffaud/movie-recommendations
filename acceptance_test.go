@@ -1,24 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"os/exec"
+	"strings"
 	"testing"
 )
 
 func TestCLI(t *testing.T) {
-	out, err := exec.Command(`./movie-recommendations`, `--genre=animation`, `--showing=10:00`).Output()
-
-	fmt.Println(string(out))
+	out, err := exec.Command(`./movie-recommendations`, `--genre=animation`, `--showing=00:00`).Output()
 	if err != nil {
-		fmt.Println(err)
 		t.Error("Error when trying to run the movie recommendation command")
 	}
-	expected :=
-		`Zootopia, showing at 7pm
-Shaun The Sheep, showing at 7pm
-`
-	if string(out) != expected {
-		t.Errorf("Expected returned string `%s`, found `%s`", expected, string(out))
+
+	returned := string(out)
+
+	if !strings.Contains(returned, "Zootopia, showing at") || !strings.Contains(returned, "Shaun The Sheep, showing at") {
+		t.Errorf("Expected returned string contains `%s` and `%s`, found `%s`", "Zootopia, showing at", "Shaun The Sheep, showing at", string(out))
+	}
+}
+
+func TestCLIWrongTime(t *testing.T) {
+	out, _ := exec.Command(`./movie-recommendations`, `--showing=dfdsfs`).Output()
+
+	if !strings.Contains(string(out), "Error Parsing date, should use format: 15:04") {
+		t.Error("Missing expected error when incorrect date format")
 	}
 }
