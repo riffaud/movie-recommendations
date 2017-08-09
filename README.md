@@ -6,7 +6,7 @@ Golang CLI tool to search movie recommendations based on time ang genre.
 
 The package depends on [Golang](https://golang.org/doc/install).
 
-## Installation/Usage
+## Install and Run
 
 To install, checkout this repository, and run at the root of the project:
 
@@ -18,8 +18,21 @@ To use, run:
 
 Both parameters are optional.
 
+## Use in your code
+
+You can use this library directly in your code. There is only one type of storage at the moment, that is taking an io.Reader as an argument.
+
+    import "github.com/riffaudo/movie-recommendations/movie"
+
+    storage, _ := movie.StorageFromReader(io.Reader)
+    moviesData := storage.Load(movie.SearchParams{Genre: "Animation"})
+
 ## Running the tests
 
-The acceptance tests require that you build first, then simply run:
+The acceptance tests require that you build first:
+
+    go build
+
+ then run:
 
     go test -v ./...
