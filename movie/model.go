@@ -42,10 +42,10 @@ func (j *ShowingTime) UnmarshalJSON(b []byte) error {
 func (m Movie) DisplayNextShowing(t time.Time) string {
 	for _, ms := range m.Showings {
 		if ms.After(t) {
-			return fmt.Sprintf("%s, showing at %s", m.Name, ms.Format("3pm"))
+			return fmt.Sprintf("%s, showing at %s", m.Name, ms.In(time.Local).Format("3pm"))
 		}
 	}
-	return fmt.Sprintf("%s, showing at %s", m.Name, m.Showings[0].Format("3pm"))
+	return fmt.Sprintf("%s, showing at %s", m.Name, m.Showings[0].In(time.Local).Format("3pm"))
 }
 
 func parseTime(s string) (time.Time, error) {
