@@ -2,6 +2,7 @@ package movie
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -43,14 +44,14 @@ func (j ShowingTime) MarshalJSON() ([]byte, error) {
 }
 
 // DisplayNextShowing is a rendering method to display a Movie next showing
+// when no showing is found after requested time it will just use the first showing
 func (m Movie) DisplayNextShowing(t time.Time) string {
-	d := m.Name + ", "
 	for _, ms := range m.Showings {
 		if ms.After(t) {
-			return d + "showing at " + ms.Format("3pm")
+			return fmt.Sprintf("%s, showing at %s", m.Name, ms.Format("3pm"))
 		}
 	}
-	return d + " is not showing after " + t.Format("3pm")
+	return fmt.Sprintf("%s, showing at %s", m.Name, m.Showings[0].Format("3pm"))
 }
 
 func parseTime(s string) (time.Time, error) {
