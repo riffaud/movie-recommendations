@@ -1,7 +1,6 @@
 package movie
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -36,11 +35,6 @@ func (j *ShowingTime) UnmarshalJSON(b []byte) error {
 	}
 	*j = ShowingTime{st}
 	return nil
-}
-
-// MarshalJSON nothing to do there
-func (j ShowingTime) MarshalJSON() ([]byte, error) {
-	return json.Marshal(j)
 }
 
 // DisplayNextShowing is a rendering method to display a Movie next showing

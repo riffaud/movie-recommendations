@@ -2,7 +2,7 @@ package movie
 
 import (
 	"encoding/json"
-	"net/http"
+	"io"
 	"time"
 )
 
@@ -36,14 +36,9 @@ func (s StaticStorage) Load(params SearchParams) (ret Movies) {
 	return s.Movies.filter(filters)
 }
 
-// StorageFromURL builds a static storage from json data fetched by http get
-func StorageFromURL(url string) (Storage, error) {
-	response, err := http.Get(url)
-	if err != nil {
-		return StaticStorage{}, err
-	}
-	defer response.Body.Close()
+// StorageFromReader builds a static storage from json data fetched from a reader
+func StorageFromReader(r io.Reader) (Storage, error) {
 	res := Movies{}
-	json.NewDecoder(response.Body).Decode(&res)
-	return StaticStorage{res}, nil
+	err := json.NewDecoder(r).Decode(&res)
+	return StaticStorage{res}, err
 }

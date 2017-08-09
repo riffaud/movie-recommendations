@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/riffaudo/movie-recommendations/movie"
@@ -13,9 +14,14 @@ var (
 )
 
 func init() {
-	var err error
-	storage, err = movie.StorageFromURL("http://pastebin.com/raw/cVyp3McN")
+	response, err := http.Get("http://pastebin.com/raw/cVyp3McN")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer response.Body.Close()
 
+	storage, err = movie.StorageFromReader(response.Body)
 	if err != nil {
 		fmt.Println(err)
 		return
