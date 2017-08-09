@@ -6,28 +6,23 @@ import (
 	"time"
 )
 
-type Movie struct {
-	Name     string
-	Rating   int
-	Genres   []string
-	Showings []ShowingTime
-}
-
-type Movies []Movie
-
+// Storage type to describe a storage that can load movies
 type Storage interface {
 	Load(params SearchParams) Movies
 }
 
+// StaticStorage is a sort of storage that contains all movies in memory
 type StaticStorage struct {
 	Movies Movies
 }
 
+// SearchParams to query/search a storage
 type SearchParams struct {
 	Genre   string
 	Showing time.Time
 }
 
+// Load and filter data from a static storage
 func (s StaticStorage) Load(params SearchParams) (ret Movies) {
 	filters := []movieFilter{}
 
@@ -41,7 +36,8 @@ func (s StaticStorage) Load(params SearchParams) (ret Movies) {
 	return s.Movies.filter(filters)
 }
 
-func StorageFromUrl(url string) (Storage, error) {
+// StorageFromURL builds a static storage from json data fetched by http get
+func StorageFromURL(url string) (Storage, error) {
 	response, err := http.Get(url)
 	if err != nil {
 		return StaticStorage{}, err
